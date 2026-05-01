@@ -1,0 +1,35 @@
+# Entorno virtual
+venv/
+.env/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# Sistema
+.DS_Store
+
+# OneDrive conflictos
+*.tmp
+*.bak
+
+# Archivos sensibles
+.env
+*.env
+
+# Node (por si usas algo)
+node_modules/
+
+# Datos / archivos grandes (ajusta según tu proyecto)
+*.csv
+*.xlsx
+*.pdf
