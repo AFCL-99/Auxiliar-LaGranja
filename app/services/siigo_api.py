@@ -1,5 +1,4 @@
 import json
-
 from app.services.auth_service import get_token
 import requests
 from datetime import datetime, timedelta
@@ -18,33 +17,29 @@ def siigo_request(endpoint, method="get", payload=None, params=None):
     }
 
     url = BASE_URL + endpoint
-    print(url)
+    print("URL:", url)
+
     if method.lower() == "get":
         response = requests.get(url, headers=headers, params=params)
     else:
         response = requests.post(url, headers=headers, json=payload)
 
+    if response.status_code not in [200, 201]:
+        print("ERROR SIIGO:", response.text)
+        raise Exception(f"Error Siigo {response.status_code}")
+
     return response.json()
 
 def subir_factura_siigo(datos):
-    
-    token = get_token()
-    
-    headers = {
-        "Authorization": f"Bearer {token}",
-        "Content-Type": "application/json",
-        "Partner-Id": "SiigoAPI"
-    }
-    
-    response = requests.post(
-        "https://api.siigo.com/v1/purchases",
-        json=datos,
-        headers=headers
+    response = siigo_request(
+        endpoint="/purchases",
+        method="post",
+        payload=datos
     )
-    
-    return response.json()
+    return response
 
 def obtener_factura(numero_factura: str):
+    print("Obteniendo factura: " + numero_factura)
 
     factura_buscada = str(numero_factura).strip().upper()
 
@@ -56,9 +51,8 @@ def obtener_factura(numero_factura: str):
 
     created_start = hace_dias.strftime("%Y-%m-%d")
     created_end = hoy.strftime("%Y-%m-%d")
-    while True:
 
-        token = get_token()
+    while True:
 
         params = {
             "created_start": created_start,
@@ -67,17 +61,11 @@ def obtener_factura(numero_factura: str):
             "page_size": page_size
         }
 
-        headers = {
-            "Authorization": f"Bearer {token}",
-            "Partner-Id": "SiigoAPI"
-        }
-
-        response = requests.get(BASE_URL, headers=headers, params=params)
-
-        if response.status_code != 200:
-            raise Exception(f"Error Siigo: {response.text}")
-
-        data = response.json()
+        data = siigo_request(
+            endpoint="/purchases",
+            method="get",
+            params=params
+        )
 
         resultados = data.get("results", [])
 
@@ -86,10 +74,14 @@ def obtener_factura(numero_factura: str):
 
         for f in resultados:
             numero = str(f.get("number", "")).strip().upper()
+
             if numero == factura_buscada:
+                print("FACTURA ENCONTRADA")
                 return f
 
         page += 1
+
+    raise Exception("Factura no encontrada")
 
 
 def extraer_total_desde_error(response_json):

@@ -6,7 +6,6 @@ def analizar_factura(factura, obtener_historico):
     salida = []
 
     for p in productos:
-
         precio_actual = p.get("price", 0)
 
         if precio_actual == 0:

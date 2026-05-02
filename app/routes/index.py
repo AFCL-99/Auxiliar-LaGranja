@@ -101,6 +101,25 @@ def home():
                 <button type="submit">Facturar</button>
             </form>
         </div>
+
+        <div class="card">
+            <h3>🧾 Cambiar bodega</h3>
+            <p>Trasladar facturas entre bodegas</p>
+
+            <form action="/compra/trasladar" method="post">
+                <input type="text" name="numero" placeholder="Ej: 1562" required/>
+
+                <label>Nueva bodega:</label>
+                <select name="Bodega">
+                    <option value=69>Principal</option>
+                    <option value=887>Medicamentos</option>
+                    <option value=73>Plantas Neiva</option>
+                </select>
+
+                <button type="submit">Trasladar</button>
+            </form>
+        </div>
+
     </body>
     </html>
     """

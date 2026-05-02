@@ -16,6 +16,7 @@ ACCESS_KEY = os.getenv("SIIGO_ACCESS_KEY")
 PARTNER_ID = os.getenv("SIIGO_PARTNER_ID") 
 
 def get_token():
+    print("Obteniendo token siigo")
     global _token_cache
 
     if _token_cache["access_token"] and time.time() < _token_cache["expires_at"]:
@@ -38,7 +39,6 @@ def get_token():
     if "access_token" not in data:
         raise Exception(f"Error obteniendo token: {data}")
 
-    # ⏱ guardar en cache (ej: 50 min)
     _token_cache["access_token"] = data["access_token"]
     _token_cache["expires_at"] = time.time() + (60 * 50)
 

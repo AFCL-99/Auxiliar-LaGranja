@@ -48,7 +48,6 @@ def cargar_historico():
 
     if _df_cache is None:
         df = pd.read_excel("app/data/consolidado.xlsx")
-        # 🔥 normalizar nombres de columnas
         df.columns = (
             df.columns
             .str.strip()
@@ -56,17 +55,10 @@ def cargar_historico():
             .str.replace(" ", "_")
         )
 
-        # 👇 ahora tienes nombres limpios:
-        # codigo_producto
-        # nombre_producto
-        # comprobante
-        # fecha_elaboracion
-        # precio_unitario
-
         df["codigo_limpio"] = df["codigo"].apply(limpiar_codigo)
         df["precio"] = df["precio_unitario"].apply(parsear_numero)
         df["fecha"] = pd.to_datetime(df["fecha_elaboracion"], errors="coerce")
 
         _df_cache = df
-
+        print(df.head)
     return _df_cache
