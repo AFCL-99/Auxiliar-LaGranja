@@ -1,15 +1,14 @@
 from fastapi import APIRouter, UploadFile, File
 from fastapi.responses import HTMLResponse
 from app.services import leerPdf, leerExcel
-from app.services.factura_service import detectar_y_procesar
+from app.services.factura_service import calcular_totales_factura, detectar_y_procesar
 from app.utils import generarHtml
-from app.services.calculos import calcular_totales
 import shutil
 import os
 import uuid
 from app.utils.temp_store import temp_data
 from datetime import date
-import json
+
 router = APIRouter(prefix="/compra", tags=["compra"])
 
 @router.post("/preview", response_class=HTMLResponse)
@@ -28,7 +27,7 @@ async def preview_factura(file: UploadFile = File(...)):
     print(proveedor)
     df = leerExcel.cargar_maestro_productos("app/data/productos.xlsx")
     items = leerExcel.mapear_productos(items, df)
-    totales = calcular_totales(items)
+    totales = calcular_totales_factura(items)
 
     temp_data[id_proceso] = {
         "factura_id": id_factura,
@@ -57,4 +56,3 @@ def formulario():
         </body>
     </html>
     """
-

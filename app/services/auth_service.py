@@ -4,7 +4,6 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-api_key = os.getenv("API_KEY")
 
 # 🔹 cache en memoria
 _token_cache = {
@@ -12,7 +11,6 @@ _token_cache = {
     "expires_at": 0
 }
 
-# 🔹 credenciales (luego las pasamos a .env)
 USERNAME = os.getenv("SIIGO_USERNAME")
 ACCESS_KEY = os.getenv("SIIGO_ACCESS_KEY")
 PARTNER_ID = os.getenv("SIIGO_PARTNER_ID") 
@@ -20,11 +18,9 @@ PARTNER_ID = os.getenv("SIIGO_PARTNER_ID")
 def get_token():
     global _token_cache
 
-    # 🔥 si el token aún es válido, usarlo
     if _token_cache["access_token"] and time.time() < _token_cache["expires_at"]:
         return _token_cache["access_token"]
 
-    # 🔄 pedir nuevo token
     response = requests.post(
         "https://api.siigo.com/auth",
         json={

@@ -45,6 +45,19 @@ def home():
             a:hover {
                 background: #1b5e20;
             }
+            button {
+                margin-top: 10px;
+                background-color: #2e7d32; /* mismo verde */
+                color: white;
+                border: none;
+                padding: 6px 12px;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+            button:hover {
+                background: #1b5e20;
+            }
         </style>
     </head>
     <body>
@@ -61,12 +74,6 @@ def home():
             <p>Generar cierre diario</p>
             <a href="/cierre">Ir</a>
         </div>
-
-        <div class="card">
-            <h3>📄 Actualizar factura</h3>
-            <p>Procesar PDF y previsualizar</p>
-            <a href="/compra/actualizar">Ir</a>
-        </div>
         
         <div class="card">
             <h3>📄 Alza de precios</h3>
@@ -77,6 +84,23 @@ def home():
             </form>
         </div>
 
+        <div class="card">
+            <h3>🧾 Facturar cotización</h3>
+            <p>Crear factura desde cotización</p>
+
+            <form action="/cotizacion/facturar" method="post">
+                <input type="text" name="numero" placeholder="Ej: 1562" required/>
+
+                <label>Vencimiento:</label>
+                <select name="tipo_vencimiento">
+                    <option value="hoy">Hoy</option>
+                    <option value="15">15 días</option>
+                    <option value="fin_mes">Fin de mes</option>
+                </select>
+
+                <button type="submit">Facturar</button>
+            </form>
+        </div>
     </body>
     </html>
     """

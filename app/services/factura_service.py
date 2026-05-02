@@ -1,5 +1,4 @@
-from app.providers import contegral, italcol, alimentosPolar, italcolDeOccidente, gabrica
-from app.services.siigo_api import actualizar_factura_siigo
+from app.providers import contegral, italcol, alimentosPolar, gabrica
 
 def detectar_y_procesar(texto):
 
@@ -13,19 +12,44 @@ def detectar_y_procesar(texto):
         return alimentosPolar.procesar(texto)
     
     if "nit: 891304762-2" in texto:
-        return italcolDeOccidente.procesar(texto)
+        return ""
 
     if "nit 800164767 - 6" in texto:
         return gabrica.procesar(texto)
 
     raise Exception("Proveedor no soportado")
 
+def calcular_totales_factura(items):
+    subtotal = 0
+    total_iva = 0
+    descuentoTotal = 0
+    for item in items:
+        cantidad = item["cantidad"]
+        precio = item["precio"]
+        descuento = item.get("descuento", 0)
+        iva_porcentaje = item.get("iva", 0)
 
-def detectar_y_actualizar(id_factura: str, texto: str):
+        # 🔹 descuento por unidad
+        descuento_unitario = descuento / cantidad if cantidad else 0
 
-    items = detectar_y_procesar(texto)
+        # 🔹 precio final unitario
+        precio_final = round(precio - descuento_unitario, 2)
 
-    # 🔹 actualizar factura
-    response = actualizar_factura_siigo(id_factura, items)
+        # 🔹 base línea
+        base = round(precio_final * cantidad, 2)
 
-    return response
+        # 🔹 IVA
+        iva = round(base * iva_porcentaje / 100, 2)
+
+        subtotal += round(cantidad*precio,2)
+        total_iva += iva
+        descuentoTotal += descuento
+
+    total = subtotal + total_iva - descuentoTotal
+
+    return {
+        "subtotal": round(subtotal, 2),
+        "descuento": round(descuentoTotal,2),
+        "iva": round(total_iva, 2),
+        "total": round(total, 2)
+    }
