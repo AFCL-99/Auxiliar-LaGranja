@@ -17,18 +17,25 @@ def siigo_request(endpoint, method="get", payload=None, params=None):
     }
 
     url = BASE_URL + endpoint
-    print("URL:", url)
+    method = method.lower()
 
-    if method.lower() == "get":
-        response = requests.get(url, headers=headers, params=params)
-    else:
-        response = requests.post(url, headers=headers, json=payload)
+    print(f"{method.upper()} -> {url}")
+
+    response = requests.request(
+        method=method,
+        url=url,
+        headers=headers,
+        json=payload,
+        params=params
+    )
 
     if response.status_code not in [200, 201]:
         print("ERROR SIIGO:", response.text)
-        raise Exception(f"Error Siigo {response.status_code}")
+        raise Exception(f"Error Siigo {response.status_code}: {response.text}")
 
-    return response.json()
+    if response.text:
+        return response.json()
+    return None
 
 def subir_factura_siigo(datos):
     response = siigo_request(

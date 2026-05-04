@@ -18,7 +18,6 @@ def confirmar(id_proceso: str = Form(...)):
             raise Exception(f"Producto sin código Siigo: {item}")
 
     payload = construir_payload(data)
-    #print(json.dumps(payload,indent=4))
     response = subir_factura_siigo(payload)
     data = response
 

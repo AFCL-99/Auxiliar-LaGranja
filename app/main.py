@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routes.facturasCompra import preview
+from app.routes.facturasCompra import actualizar, preview
 from app.routes.facturasCompra import crear
 from app.routes import cierre, facturar, flete
 from app.routes import analisis, index
@@ -17,3 +17,4 @@ app.include_router(analisis.router)
 app.include_router(cierre.router)
 app.include_router(flete.router)
 app.include_router(facturar.router)
+app.include_router(actualizar.router)
