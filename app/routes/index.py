@@ -62,7 +62,7 @@ def home():
     </head>
     <body>
 
-        <h1>📊 Panel de Facturación</h1>
+        <h1>📊 Auxiliar Siigo</h1>
 
         <div class="card">
             <h3>📄 Factura de compra</h3>

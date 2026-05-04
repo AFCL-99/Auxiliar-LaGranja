@@ -81,7 +81,7 @@ def actualizar_bodega_factura(num_factura: int, nueva_bodega: int):
         for item in items_limpios
     )
     total_final = round(total_items, 2)
-
+    print(original)
     print("Total recalculado:", total_final)
     payload = {
         "document": {
@@ -97,15 +97,8 @@ def actualizar_bodega_factura(num_factura: int, nueva_bodega: int):
         "supplier_by_item": False,
         "total": original.get("total"),
         "items": items_limpios,
-        "payments": [
-            {
-                "id": 4390,
-                "value": 1,
-                "due_date":original.get("date")
-            }
-        ]
+        "payments": original.get("payments")
     }
-    print(payload)
     response = siigo_request(endpoint, method="put", payload=payload)
 
     return response
