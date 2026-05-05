@@ -27,7 +27,7 @@ def confirmar(id_proceso: str = Form(...)):
 
     if data.get("errors"):
         code = data["errors"][0].get("code")
-
+        print(code)
         if code == "invalid_total_payments":
 
             total_correcto = extraer_total_desde_error(data)

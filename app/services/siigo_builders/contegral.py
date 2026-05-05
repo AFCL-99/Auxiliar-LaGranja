@@ -87,7 +87,7 @@ def construir(data):
         "payments": [
             {
                 "id": PAYMENT_ID,
-                "value": 1,
+                "value": total,
                 "due_date": fecha
             }
         ]

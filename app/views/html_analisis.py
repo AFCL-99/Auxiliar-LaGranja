@@ -1,3 +1,6 @@
+from app.routes.index import generar_header
+
+
 def generar_html_analisis(data):
 
     filas = ""
@@ -26,11 +29,11 @@ def generar_html_analisis(data):
             <td>{item['estado']}</td>
         </tr>
         """
-
+        header = generar_header()
     return f"""
     <html>
     <body style="font-family: Arial; padding:20px;">
-
+        {header}
         <h2>📊 Análisis de precios</h2>
 
         <table border="1" cellpadding="8" cellspacing="0">

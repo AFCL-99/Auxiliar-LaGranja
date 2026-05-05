@@ -92,6 +92,7 @@ def obtener_factura(numero_factura: str):
 
 
 def extraer_total_desde_error(response_json):
+    print("extrayendo total del error")
     try:
         error = response_json["errors"][0]
         mensaje = error["message"]

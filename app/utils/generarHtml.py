@@ -1,3 +1,4 @@
+from app.routes.index import generar_header
 from app.utils.temp_store import temp_data
 def generar_tabla_html(data, id_proceso):
     filas = ""
@@ -90,12 +91,14 @@ def generar_tabla_html(data, id_proceso):
         """
 
 def generar_tabla_cierre(data):
-    html = """
+    header = generar_header()
+    html = f"""
     <html>
+    {header}
     <head>
         <style>
-            table { border-collapse: collapse; width: 100%; }
-            td, th { border: 1px solid #ccc; padding: 6px; }
+            table {{ border-collapse: collapse; width: 100%; }}
+            td, th {{ border: 1px solid #ccc; padding: 6px; }}
         </style>
     </head>
     <body>
