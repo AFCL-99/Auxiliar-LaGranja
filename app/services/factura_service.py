@@ -1,4 +1,4 @@
-from app.providers import contegral, italcol, alimentosPolar, gabrica
+from app.providers import contegral, italcol, alimentosPolar, gabrica, italcolDeOccidente
 from app.services.siigo_api import obtener_factura, siigo_request
 
 def detectar_y_procesar(texto):
@@ -13,7 +13,7 @@ def detectar_y_procesar(texto):
         return alimentosPolar.procesar(texto)
     
     if "nit: 891304762-2" in texto:
-        return ""
+        return italcolDeOccidente.procesar(texto)
 
     if "nit 800164767 - 6" in texto:
         return gabrica.procesar(texto)

@@ -38,7 +38,6 @@ def extraer_items_contegral(bloque):
             nro = partes[0]
             codigo = partes[1]
             
-            # 🔥 manejar IVA con % separado
             if partes[-1] == "%":
                 iva = float(partes[-2])
                 idx = -2

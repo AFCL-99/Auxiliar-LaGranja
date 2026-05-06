@@ -1,0 +1,2 @@
+def construir(data):
+    return ""
