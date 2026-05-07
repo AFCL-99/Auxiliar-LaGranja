@@ -82,10 +82,11 @@ def procesar(texto):
 
             descuento = round(precio_unitario * cantidad * 0.02, 2)
 
+            cantidad, precio_unitario = transformar_pacas(codigo,cantidad,precio_unitario)
             items.append({
                 "codigo": codigo,
                 "cantidad": cantidad,
-                "precio": precio_unitario,
+                "precio": formatear_precio(precio_unitario),
                 "descuento": descuento,
                 "iva": iva
             })
@@ -100,3 +101,46 @@ def procesar(texto):
         "factura_id": factura["factura_id"],
         "items": items
     }
+
+CONVERSIONES = {
+    "154506":3,
+    "151222":4,
+    "151239":4,
+    "154469":4,
+    "154452":6,
+    "150263":6,
+    "153356":4,
+    "153325":6,
+    "157330":10,
+    "154612":20,
+    "153141":8,
+    "154124":4,
+    "154131":6,
+    "154889":10,
+    "157005":6,
+    "154974":6,
+    "157750":4,
+    "158191":4,
+    "158207":3,
+    "157958":12,
+    "157682":6,
+    "150737":4,
+    "156838":20,
+    "151031":6
+
+
+}
+def transformar_pacas(codigo, cantidad, precioUnitario):
+    unidades_por_paca = CONVERSIONES.get(codigo,1)
+    unidades = cantidad * unidades_por_paca
+    valor_total = cantidad * precioUnitario
+    precio_real = valor_total/unidades if unidades else 0
+
+    return unidades, precio_real
+
+from decimal import Decimal, ROUND_HALF_UP
+
+def formatear_precio(valor):
+    return float(
+        Decimal(str(valor)).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+    )
