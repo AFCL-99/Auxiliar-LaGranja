@@ -14,16 +14,23 @@ def facturar(numero: int = Form(...), tipo_vencimiento: str = Form(...)):
 
     factura = resp.get("name")
 
-    # 🔥 link directo a siigo
     url_siigo = f"https://qbo.siigo.com/#/invoices/{resp.get('id')}"
 
     return f"""
     <html>
         <body>
             <h2>✅ Factura creada correctamente</h2>
+
             <p><strong>Factura:</strong> {factura}</p>
 
+            <p>
+                <a href="{url_siigo}" target="_blank">
+                    🔗 Ver factura en Siigo
+                </a>
+            </p>
+
             <br><br>
+
             <a href="/">⬅ Volver</a>
         </body>
     </html>

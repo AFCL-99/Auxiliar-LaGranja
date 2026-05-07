@@ -49,8 +49,6 @@ def procesar(texto):
             subtotal = numeros[-4]
             precio_unitario = numeros[-5]
 
-            # ⚠️ cantidad: el PRIMER número después del código real
-            # pero ignorando números de descripción → usamos posición relativa
             cantidad = numeros[-7] if len(numeros) >= 7 else numeros[0]
 
             items.append({

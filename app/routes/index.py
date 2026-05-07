@@ -58,6 +58,64 @@ def home():
             button:hover {
                 background: #1b5e20;
             }
+            .drop-zone {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+
+                height: 120px;
+                padding: 20px;
+                border: 2px dashed #198754;
+                border-radius: 12px;
+                background: #f8fff9;
+                color: #198754;
+                cursor: pointer;
+                margin: 15px 0;
+                font-weight: bold;
+            }
+
+            .drop-zone input {
+                display: none;
+            }
+
+            .btn {
+                height: 52px;
+                padding: 0 24px;
+                border: none;
+                border-radius: 7px;
+                cursor: pointer;
+                font-size: 16px;
+                color: white;
+                text-decoration: none;
+
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .btn-success {
+                background-color: green;
+            }
+
+            .btn-danger {
+                background-color: #dc3545;
+            }
+
+            .btn-secondary {
+                background-color: #6c757d;
+            }
+
+            .acciones {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin-top: 20px;
+            }
+
+            .acciones form {
+                margin: 0;
+            }
         </style>
     </head>
     <body>
@@ -67,7 +125,17 @@ def home():
         <div class="card">
             <h3>📄 Factura de compra</h3>
             <p>Procesar PDF y previsualizar</p>
-            <a href="/compra/preview">Ir</a>
+
+            <form action="/compra/preview" method="post" enctype="multipart/form-data">
+                <label class="drop-zone">
+                    <input type="file" name="file" accept="application/pdf" required>
+                    <span>Arrastra el PDF aquí o haz clic para seleccionarlo</span>
+                </label>
+
+                <button type="submit" class="btn btn-success">
+                    Procesar factura
+                </button>
+            </form>
         </div>
         <div class="card">
             <h3>📄 Cierre</h3>
@@ -123,6 +191,18 @@ def home():
 
     </body>
     </html>
+    <script>
+    document.querySelectorAll(".drop-zone input").forEach(input => {
+        input.addEventListener("change", function () {
+            const label = this.closest(".drop-zone");
+            const span = label.querySelector("span");
+
+            if (this.files.length > 0) {
+                span.textContent = "📄 " + this.files[0].name;
+            }
+        });
+    });
+</script>
     """
 
 def generar_header():

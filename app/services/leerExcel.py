@@ -12,27 +12,32 @@ def cargar_maestro_productos(ruta_excel):
     return df
 
 def mapear_productos(items, df_productos):
-    
+
     resultado = []
-    
+
     for item in items:
         codigo = item["codigo"].strip().upper()
-        
-        match = df_productos[df_productos["codigo_proveedor"] == codigo]
-        
+
+        match = df_productos[
+            df_productos["codigo_proveedor"].astype(str).str.upper() == codigo
+        ]
+
         if not match.empty:
             producto = match.iloc[0]
-            
+
             item["nombre"] = producto["nombre"]
             item["codigo_siigo"] = producto["codigo_siigo"]
             item["encontrado"] = True
+            item["producto_nuevo"] = False
+
         else:
-            item["nombre"] = "NO ENCONTRADO"
-            item["codigo_siigo"] = None
+            item["nombre"] = "PRODUCTO NO ENCONTRADO"
+            item["codigo_siigo"] = "FER02"
             item["encontrado"] = False
-        
+            item["producto_nuevo"] = True
+
         resultado.append(item)
-    
+
     return resultado
 
 def cargar_clientes(ruta):
