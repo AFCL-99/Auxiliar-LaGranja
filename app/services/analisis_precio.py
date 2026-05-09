@@ -1,4 +1,6 @@
-def analizar_factura(factura, obtener_historico):
+from app.services.historico import obtener_precio_historico
+
+def analizar_factura(factura):
 
     productos = factura.get("items", [])
     comprobante_actual = f"{factura.get('prefix','')}{factura.get('number','')}"
@@ -14,7 +16,7 @@ def analizar_factura(factura, obtener_historico):
         codigo = str(p.get("code")).strip()
         descripcion = p.get("description", "")
 
-        historico = obtener_historico(codigo, comprobante_actual)
+        historico = obtener_precio_historico(codigo, comprobante_actual)
 
         precio_anterior = historico.get("precio", 0)
 

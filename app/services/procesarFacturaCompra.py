@@ -3,7 +3,7 @@ import os
 import shutil
 from datetime import date
 
-from app.services import leerPdf, leerExcel
+from app.services import leerDocumentos
 from app.services.factura_service import calcular_totales_factura, detectar_y_procesar
 
 
@@ -15,7 +15,7 @@ def procesar_preview_factura(file, temp_data):
         shutil.copyfileobj(file.file, buffer)
 
     try:
-        texto = leerPdf.extraer_texto_pdf(ruta_temp)
+        texto = leerDocumentos.extraer_texto_pdf(ruta_temp)
 
         data_proveedor = detectar_y_procesar(texto)
 
@@ -23,11 +23,11 @@ def procesar_preview_factura(file, temp_data):
         factura_id = data_proveedor["factura_id"]
         proveedor = data_proveedor["proveedor"]
 
-        df = leerExcel.cargar_maestro_productos(
+        df = leerDocumentos.cargar_maestro_productos(
             "app/data/productos.xlsx"
         )
 
-        items = leerExcel.mapear_productos(items, df)
+        items = leerDocumentos.mapear_productos(items, df)
 
         totales = calcular_totales_factura(items)
 

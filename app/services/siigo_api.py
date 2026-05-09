@@ -1,8 +1,11 @@
 import json
+from app.config.recibo_pago_config import FLETES_SIIGO
 from app.services.auth_service import get_token
 import requests
 from datetime import datetime, timedelta
 import re
+
+from app.utils.htmlToPdf import generar_pdf
 
 BASE_URL = "https://api.siigo.com/v1"
 
@@ -29,13 +32,21 @@ def siigo_request(endpoint, method="get", payload=None, params=None):
         params=params
     )
 
-    if response.status_code not in [200, 201]:
-        print("ERROR SIIGO:", response.text)
-        raise Exception(f"Error Siigo {response.status_code}: {response.text}")
+    try:
+        data = response.json()
+    except Exception:
+        data = {
+            "raw": response.text
+        }
 
-    if response.text:
-        return response.json()
-    return None
+    if isinstance(data, dict):
+        data["status"] = response.status_code
+
+    if response.status_code not in [200, 201]:
+        print("ERROR SIIGO:", data)
+        return data
+
+    return data
 
 def subir_factura_siigo(datos):
     response = siigo_request(
@@ -171,19 +182,67 @@ def buscar_cotizacion(numero):
 
     return resp["results"][0]
 
+    
+def crear_flete_pago(nombre, valor, fecha, recibo, banco):
 
-def obtener_fecha_vencimiento(tipo):
+    tercero = FLETES_SIIGO[nombre]
 
-    hoy = datetime.now()
+    payload = {
 
-    if tipo == "hoy":
-        return hoy.strftime("%Y-%m-%d")
+        "document": {
+            "id": 14147
+        },
 
-    elif tipo == "15":
-        return (hoy + timedelta(days=15)).strftime("%Y-%m-%d")
+        "date": fecha.strftime("%Y-%m-%d"),
 
-    elif tipo == "fin_mes":
-        siguiente_mes = hoy.replace(day=28) + timedelta(days=4)
-        ultimo_dia = siguiente_mes - timedelta(days=siguiente_mes.day)
+        "type": "AdvancePayment",
 
-        return ultimo_dia.strftime("%Y-%m-%d")
+        "supplier": {
+            "identification": tercero["identification"],
+            "branch_office": 0
+        },
+
+        "observations": f"CONSIGNACION {banco} RCBO {recibo}",
+
+        "payment": {
+            "id": 4389,
+            "value": valor
+        }
+    }
+    response = subir_pago_flete(payload)
+    return generar_pdf(tercero,response)
+
+def subir_pago_flete(datos):
+    response = siigo_request(
+        endpoint="/payment-receipts",
+        method="post",
+        payload=datos
+    )
+    print(response.get("number"))
+    return response
+
+def subir_pago_flete_prueba(datos):
+    return {
+            "id": "e1c8432a-8a2d-4b62-905c-0a878a569fab",
+            "document": {
+                "id": 14147
+            },
+            "number": 7682,
+            "name": "RP-1-7682",
+            "date": "2026-05-07",
+            "type": "AdvancePayment",
+            "supplier": {
+                "id": "7305afc6-9ca5-4747-b3c7-a956077d32b3",
+                "identification": "30509423",
+                "branch_office": 0
+            },
+            "observations": "CONSIGNACION davivienda RCBO 445152",
+            "payment": {
+                "id": 4389,
+                "value": 2127600.0
+            },
+            "metadata": {
+                "created": "2026-05-07T10:58:22"
+            },
+            "status": 201
+        }

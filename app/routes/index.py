@@ -204,13 +204,3 @@ def home():
     });
 </script>
     """
-
-def generar_header():
-    return """
-    <header style="margin-bottom:20px;">
-        <a href="/" style="text-decoration:none; font-weight:bold;">
-            ⬅ Volver al inicio
-        </a>
-        <hr>
-    </header>
-    """

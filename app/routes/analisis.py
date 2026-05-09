@@ -3,7 +3,6 @@ from fastapi.responses import HTMLResponse
 
 from app.services.siigo_api import obtener_factura
 from app.services.analisis_precio import analizar_factura
-from app.services.historico import obtener_precio_historico
 from app.views.html_analisis import generar_html_analisis
 
 router = APIRouter(prefix="/analisis", tags=["analisis"])
@@ -15,10 +14,7 @@ def analizar(numero: str):
     try:
         factura = obtener_factura(numero)
 
-        resultado = analizar_factura(
-            factura,
-            obtener_precio_historico
-        )
+        resultado = analizar_factura(factura)
         html = generar_html_analisis(resultado)
 
         return html

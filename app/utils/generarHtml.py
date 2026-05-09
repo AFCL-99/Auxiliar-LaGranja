@@ -1,4 +1,3 @@
-from app.routes.index import generar_header
 from app.utils.temp_store import temp_data
 
 def formatear_moneda(valor):
@@ -254,7 +253,7 @@ def generar_tabla_html(data, id_proceso):
             document.addEventListener("DOMContentLoaded", function () {{
 
                 const form = document.getElementById("formCrearFactura");
-
+        
                 if (!form) {{
                     console.error("No se encontró formCrearFactura");
                     return;
@@ -291,7 +290,7 @@ def generar_tabla_html(data, id_proceso):
                         }});
 
                         const data = await response.json();
-
+                        const numeroFactura = data.siigo?.number || "";
                         loader.style.display = "none";
 
                         if (data.ok === true || data.ok === "true") {{
@@ -303,9 +302,8 @@ def generar_tabla_html(data, id_proceso):
                                 <a href="/" class="btn btn-secondary">
                                     Volver al inicio
                                 </a>
-
                                 <form action="/analisis/factura" method="get">
-                                    <input type="hidden" name="numero" value="${{obtenerNumeroFactura()}}">
+                                    <input type="hidden" name="numero" value="${{numeroFactura}}">
                                     <button type="submit" class="btn btn-success">
                                         Ver análisis de precio
                                     </button>
@@ -467,3 +465,13 @@ def generar_tabla_cierre(data):
     """
 
     return html
+
+def generar_header():
+    return """
+    <header style="margin-bottom:20px;">
+        <a href="/" style="text-decoration:none; font-weight:bold;">
+            ⬅ Volver al inicio
+        </a>
+        <hr>
+    </header>
+    """

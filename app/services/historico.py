@@ -60,5 +60,4 @@ def cargar_historico():
         df["fecha"] = pd.to_datetime(df["fecha_elaboracion"], errors="coerce")
 
         _df_cache = df
-        print(df.head)
     return _df_cache

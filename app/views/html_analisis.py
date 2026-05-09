@@ -1,4 +1,5 @@
-from app.routes.index import generar_header
+
+from app.utils.generarHtml import generar_header
 
 
 def generar_html_analisis(data):

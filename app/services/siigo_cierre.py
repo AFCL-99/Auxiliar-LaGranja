@@ -2,7 +2,7 @@ import json
 from colorama import Fore, Style, init
 init(autoreset=True)
 import requests
-from app.services.leerExcel import cargar_clientes, mapear_clientes
+from app.services.leerDocumentos import cargar_clientes, mapear_clientes
 BASE_URL = "https://api.siigo.com/v1"
 
 def obtener_cierre(token, fecha):
@@ -43,9 +43,24 @@ def obtener_cierre(token, fecha):
             if f.get("date") != fecha:
                 continue
 
-            if not f.get("payments"):
+            if not f.get("payments"):              
+                
+                rows.append({
+                    "orden": int(f["name"].replace("FV-03-", "")),
+                    "data": [
+                        f["date"],
+                        "",
+                        obtener_nombre_cliente(f["customer"]["identification"]),
+                        f["name"].replace("FV-03-", ""),
+                        "",
+                        "",
+                        formatear_numero(f.get("total")),
+                        "",
+                        ""
+                    ]
+                })
                 continue
-
+       
             numero = int(f["name"].replace("FV-03-", ""))
             cliente = obtener_nombre_cliente(f["customer"]["identification"])
 
@@ -214,9 +229,8 @@ def obtener_cierre(token, fecha):
               
                 if v.get("payment"):
                     metodo_lower = metodo.lower()
-                    print(metodo_lower)
                     if "efectivo" in metodo_lower:
-                        cartera = valor_fmt   # 👈 efectivo siempre a cartera
+                        cartera = valor_fmt   
                         metodo = ""
                     else:
                         banco = valor_fmt

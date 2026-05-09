@@ -1,7 +1,8 @@
+from datetime import datetime, timedelta
+
 from fastapi import APIRouter, Form
 from fastapi.responses import HTMLResponse
-from datetime import datetime, timedelta
-from app.services.siigo_api import crear_factura_desde_cotizacion, obtener_fecha_vencimiento
+from app.services.siigo_api import crear_factura_desde_cotizacion
 
 router = APIRouter(prefix="/cotizacion", tags=["cotizacion"])
 
@@ -14,8 +15,6 @@ def facturar(numero: int = Form(...), tipo_vencimiento: str = Form(...)):
 
     factura = resp.get("name")
 
-    url_siigo = f"https://qbo.siigo.com/#/invoices/{resp.get('id')}"
-
     return f"""
     <html>
         <body>
@@ -23,15 +22,25 @@ def facturar(numero: int = Form(...), tipo_vencimiento: str = Form(...)):
 
             <p><strong>Factura:</strong> {factura}</p>
 
-            <p>
-                <a href="{url_siigo}" target="_blank">
-                    🔗 Ver factura en Siigo
-                </a>
-            </p>
-
             <br><br>
 
             <a href="/">⬅ Volver</a>
         </body>
     </html>
     """
+
+def obtener_fecha_vencimiento(tipo):
+
+    hoy = datetime.now()
+
+    if tipo == "hoy":
+        return hoy.strftime("%Y-%m-%d")
+
+    elif tipo == "15":
+        return (hoy + timedelta(days=15)).strftime("%Y-%m-%d")
+
+    elif tipo == "fin_mes":
+        siguiente_mes = hoy.replace(day=28) + timedelta(days=4)
+        ultimo_dia = siguiente_mes - timedelta(days=siguiente_mes.day)
+
+        return ultimo_dia.strftime("%Y-%m-%d")

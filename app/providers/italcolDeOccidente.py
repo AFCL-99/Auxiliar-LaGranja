@@ -53,7 +53,6 @@ def procesar(texto):
             continue
 
         try:
-            # Ejemplo:
             # 154506 agility gatos pack(3*3kg) lote:1304-9432 2 pac 18 $160.727 $ 321.454 5 %
 
             codigo = linea.split()[0]
