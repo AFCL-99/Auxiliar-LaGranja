@@ -1,0 +1,20 @@
+<table id="tabla">
+    <tr>
+        <th>Fecha</th>
+        <th></th>
+        <th>Cliente</th>
+        <th>Comprobante</th>
+        <th>Cartera</th>
+        <th>Efectivo</th>
+        <th>Crédito</th>
+        <th>Banco</th>
+        <th>Método</th>
+    </tr>
+
+    {% for fila in filas %}
+    <tr>
+        {% for columna in fila %}
+        <td>{{columna}}</td>"
+        </tr>
+</table>
+<button onclick="copiar()">📋 Copiar</button>

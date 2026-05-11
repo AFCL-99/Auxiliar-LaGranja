@@ -1,0 +1,66 @@
+{% extends "base.html" %} {% block title %} {{ factura.proveedor }}
+{{factura.numeroFactura}} {% endblock %} {% block content %}
+<div class="container">
+  <h2>Factura: {{factura.numeroFactura}}</h2>
+  <p class="proveedor">Proveedor: {{ factura.proveedor }}</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Código</th>
+        <th>Producto</th>
+        <th>Cantidad</th>
+        <th>Precio</th>
+        <th>Descuento</th>
+        <th>IVA</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in factura.items %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ item.codigo }}</td>
+        <td>{{ item.descripcion }}</td>
+        <td>{{ item.cantidad }}</td>
+        <td>{{ item.valorUnitario | moneda}}</td>
+        <td>{{ item.descuento }}</td>
+        <td>{{ item.iva }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <br />
+</div>
+<div class="totales">
+  <p>Subtotal: <strong>{{factura.calcularSubtotal | moneda}}</strong></p>
+  {%if factura.calcularDescuentos > 0 %}
+  <p>Descuento: <strong>{{factura.calcularDescuentos | moneda}}</strong></p>
+  {% endif %}
+  <p>IVA: <strong>{{factura.calcularIvaTotal | moneda}}</strong></p>
+  <p class="total">TOTAL: {{factura.total | moneda}}</p>
+</div>
+
+<form id="formCrearFactura" method="post">
+  <input type="hidden" name="process_id" value="{{ process_id }}" />
+  <button type="submit" class="btn btn-success">
+    ✅ Crear factura en SIIGO
+  </button>
+</form>
+
+<div id="modalCarga" class="modal">
+  <div class="modal-content">
+    <div id="loader" class="loader"></div>
+
+    <h2 id="modalTitulo">Subiendo factura...</h2>
+
+    <p id="modalMensaje">Estamos enviando la factura a SIIGO.</p>
+
+    <pre id="modalDetalle" style="display: none"></pre>
+
+    <div id="modalAcciones" class="modal-acciones"></div>
+  </div>
+</div>
+
+<script src="{{ url_for('static', path='js/preview.js') }}"></script>
+{% endblock %}

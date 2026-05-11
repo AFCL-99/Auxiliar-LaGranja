@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+    {{ header | safe }}
+
+    <h2>📊 Análisis de precios</h2>
+
+    <table>
+        <tr>
+            <th>Código</th>
+            <th>Producto</th>
+            <th>Precio Anterior</th>
+            <th>Precio Actual</th>
+            <th>Comp</th>
+            <th>Fecha</th>
+            <th>Δ Precio</th>
+            <th>% Var</th>
+            <th>Estado</th>
+        </tr>
+
+        {% for item in items %}
+
+        <tr class="estado-{{ item.estado }}">
+            <td>{{ item.codigo }}</td>
+            <td>{{ item.descripcion }}</td>
+            <td>{{ item.precio_anterior | moneda }}</td>
+            <td>{{ item.precio_actual | moneda}}</td>
+            <td>{{ item.comprobante or "" }}</td>
+            <td>
+                {% if item.fecha %}
+                {{ item.fecha.strftime("%Y-%m") }}
+                {% endif %}
+            </td>
+            <td>{{ item.diferencia | moneda}}</td>
+            <td>{{ item.porcentaje | porcentaje}}</td>
+            <td>{{ item.estado }}</td>
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+{% endblock %}

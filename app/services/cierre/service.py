@@ -1,0 +1,267 @@
+from datetime import datetime, timedelta
+from app.repositories.clientes_repository import cargar_clientes, obtener_nombre_cliente
+
+
+async def obtener_cierre():
+    fecha = str(datetime.date.today() - timedelta(days=0))
+    created_start = f"{fecha}T00:00:00"
+    created_end = f"{fecha}T23:59:59"
+    df_clientes = cargar_clientes()
+    rows = []
+    rc_rows = []
+    cache_clientes = {}
+
+    def obtener_nombre(identificacion):
+        return obtener_nombre_cliente(identificacion, df_clientes, cache_clientes)
+
+    page = 1
+
+    while True:
+        params = {
+            "created_start": created_start,
+            "created_end": created_end,
+            "page": page,
+            "page_size": 25,
+        }
+
+        data = requests.get(url, headers=headers).json()
+
+        if not data.get("results"):
+            break
+
+        for f in data["results"]:
+
+            if not f.get("name", "").startswith("FV-03"):
+                continue
+
+            if f.get("date") != fecha:
+                continue
+
+            if not f.get("payments"):
+
+                rows.append(
+                    {
+                        "orden": int(f["name"].replace("FV-03-", "")),
+                        "data": [
+                            f["date"],
+                            "",
+                            obtener_nombre_cliente(f["customer"]["identification"]),
+                            f["name"].replace("FV-03-", ""),
+                            "",
+                            "",
+                            formatear_numero(f.get("total")),
+                            "",
+                            "",
+                        ],
+                    }
+                )
+                continue
+
+            numero = int(f["name"].replace("FV-03-", ""))
+            cliente = obtener_nombre_cliente(f["customer"]["identification"])
+
+            for pago in f["payments"]:
+
+                metodo = (pago.get("name") or "").lower()
+                valor = pago.get("value", 0)
+                valor = formatear_numero(valor)
+                efectivo = crédito = banco = ""
+                metodoMostrar = pago.get("name", "")
+                if "efectivo" in metodo:
+                    efectivo = valor
+                    metodoMostrar = ""
+                elif "crédito" in metodo:
+                    crédito = valor
+                    metodoMostrar = ""
+                else:
+                    banco = valor
+
+                rows.append(
+                    {
+                        "orden": numero,
+                        "data": [
+                            f["date"],
+                            "",
+                            cliente,
+                            f["name"].replace("FV-03-", ""),
+                            "",
+                            efectivo,
+                            crédito,
+                            banco,
+                            metodoMostrar,
+                        ],
+                    }
+                )
+
+        page += 1
+
+    rows.sort(key=lambda x: x["orden"])
+    rows_final = [r["data"] for r in rows]
+
+    # =============================
+    # 2️⃣ VOUCHERS (RC)
+    # =============================
+
+    page = 1
+
+    while True:
+        url = f"{BASE_URL}/vouchers?created_start={fecha_inicio}&created_end={fecha_fin}&page={page}&page_size=100"
+
+        data = requests.get(url, headers=headers).json()
+
+        if not data.get("results"):
+            break
+
+        for v in data["results"]:
+
+            if v.get("date") != fecha:
+                continue
+
+            numero = f"RC-{v.get('number', '')}"
+            cliente_id = v.get("customer", {}).get("identification", "")
+            cliente = obtener_nombre_cliente(cliente_id)
+
+            total_credito = total_efectivo = total_bancos = total_ajustes = 0
+            valor = 0
+            metodo = ""
+
+            if v.get("type") == "Detailed":
+                resultado = discriminar_pagos(v)
+
+                total_credito = resultado["facturas_pagadas"]
+                total_efectivo = resultado["pagado_efectivo"]
+                total_bancos = resultado["pagado_bancos"]
+                total_ajustes = resultado["ajustes"]
+
+                valor = total_efectivo + total_bancos
+
+            else:
+                payment = v.get("payment", {})
+                valor = payment.get("value", 0)
+                metodo = (payment.get("name") or "").lower()
+
+                total_credito = sum(i.get("value", 0) for i in v.get("items", []))
+
+                total_efectivo = 0
+                total_bancos = 0
+
+                if "efectivo" in metodo:
+                    total_efectivo = valor
+                else:
+                    total_bancos = valor
+
+            # =============================
+            # FORMATEOS
+            # =============================
+            print(Fore.CYAN + f"RC: {numero}")
+            print(Fore.YELLOW + f"Cliente: {cliente}")
+
+            print(Fore.GREEN + f"Efectivo: {total_efectivo}")
+            print(Fore.BLUE + f"Banco: {total_bancos}")
+            print(Fore.MAGENTA + f"Cartera: {total_credito}")
+            print(Fore.RED + f"Ajustes: {total_ajustes}")
+
+            print(Style.DIM + "-" * 40)
+            valor_fmt = formatear_numero(valor)
+            efectivo_fmt = formatear_numero(total_efectivo)
+            banco_fmt = formatear_numero(total_bancos)
+            cartera_fmt = formatear_numero(total_credito)
+
+            observacion = (v.get("observations") or "").lower()
+            es_detailed = v.get("type") == "Detailed"
+
+            es_efectivo = False
+            es_banco = False
+
+            if es_detailed:
+                if "efectivo" in observacion:
+                    es_efectivo = True
+                elif "bancolombia" in observacion or "davivienda" in observacion:
+                    es_banco = True
+                    if "davivienda" in observacion:
+                        metodo = "DAVIVIENDA"
+                    if "bancolombia" in observacion:
+                        metodo = "BANCOLOMBIA"
+            else:
+                metodo_lower = metodo.lower()
+                es_efectivo = "efectivo" in metodo_lower
+                es_banco = not es_efectivo
+
+            tiene_factura = any(i.get("due") for i in v.get("items", []))
+
+            efectivo = cartera = banco = ""
+
+            # 🔥 REGLA BASE: usar datos contables, no texto
+            efectivo = ""  # ❌ nunca se usa en tu modelo
+            cartera = ""
+            banco = ""
+
+            if es_detailed:
+
+                # 💥 MIXTO
+                if total_efectivo > 0 and total_bancos > 0:
+                    cartera = efectivo_fmt  # 👈 SOLO el efectivo va a cartera
+                    banco = banco_fmt
+
+                    if "bancolombia" in observacion:
+                        metodo = "BANCOLOMBIA"
+                    elif "davivienda" in observacion:
+                        metodo = "DAVIVIENDA"
+
+                # 💵 SOLO EFECTIVO
+                elif total_efectivo > 0:
+                    cartera = efectivo_fmt  # 👈 TODO va a cartera
+                    metodo = ""
+
+                # 🏦 SOLO BANCO
+                elif total_bancos > 0:
+                    banco = banco_fmt
+
+                    if "bancolombia" in observacion:
+                        metodo = "BANCOLOMBIA"
+                    elif "davivienda" in observacion:
+                        metodo = "DAVIVIENDA"
+
+            else:
+
+                if v.get("payment"):
+                    metodo_lower = metodo.lower()
+                    if "efectivo" in metodo_lower:
+                        cartera = valor_fmt
+                        metodo = ""
+                    else:
+                        banco = valor_fmt
+
+                        if "bancolombia" in metodo_lower:
+                            metodo = "BANCOLOMBIA"
+                        elif "davivienda" or "datafono" in metodo_lower:
+                            metodo = "DAVIVIENDA"
+                        elif "caja plantas" in metodo_lower:
+                            metodo = "CAJA PLANTA"
+            if total_efectivo > 0:
+                cartera = efectivo_fmt
+            rc_rows.append(
+                [
+                    v.get("date"),
+                    numero,
+                    cliente,
+                    "",
+                    cartera,
+                    efectivo,
+                    "",
+                    banco,
+                    metodo,
+                ]
+            )
+
+        page += 1
+
+    # =============================
+    # 3️⃣ SEPARADOR + COMBINAR
+    # =============================
+
+    rows_final.append([fecha, "", "", "RM-1-", "", "", "", "", ""])
+
+    rows_final.extend(rc_rows)
+
+    return rows_final
