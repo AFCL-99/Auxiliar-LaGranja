@@ -81,7 +81,6 @@ class SierraPinedaProvider(BaseProvider):
         )
 
         if not patron:
-            print(f"No se pudo parsear producto Sierra Pineda: {linea}")
             return None
 
         codigo = patron.group(1)
@@ -89,7 +88,6 @@ class SierraPinedaProvider(BaseProvider):
         cantidad = self._numero(patron.group(6))
         precio = self._numero(patron.group(7))
         descuento = self._porcentaje(patron.group(8))
-        print(f"{patron.group(8)}->{descuento}")
         iva = self._porcentaje(patron.group(9))
         return Producto(
             codigo=codigo,

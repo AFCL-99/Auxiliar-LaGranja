@@ -1,7 +1,8 @@
 from app.providers.contegral import contegralProvider
 from app.providers.sierraPineda import SierraPinedaProvider
+from app.providers.tamayoPolanco import TamayoPolancoProvider
 
-providers = [contegralProvider(), SierraPinedaProvider()]
+providers = [contegralProvider(), SierraPinedaProvider(), TamayoPolancoProvider()]
 
 
 def detectar_provedor(texto: str):

@@ -28,4 +28,5 @@ async def buscar_factura_por_numero(numero: str):
                 numero = str(f.get("number", "")).strip().upper()
 
                 if numero == factura_buscada:
+                    print(f)
                     return f

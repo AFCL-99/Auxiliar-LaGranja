@@ -51,6 +51,7 @@ class FacturaCompra(BaseModel):
     proveedor: str
     numeroFactura: str
     items: List[Producto]
+    retefuente: bool = False
 
     @property
     def calcularSubtotal(self) -> float:
@@ -58,6 +59,16 @@ class FacturaCompra(BaseModel):
         for item in self.items:
             subtotal += item.subtotal
         return subtotal
+
+    @property
+    def calcularRetefuente(self) -> float:
+        if self.retefuente:
+            retefuente = 0
+            for item in self.items:
+                retefuente += round(item.subtotal * 0.025, 2)
+            return retefuente
+        else:
+            return 0
 
     @property
     def calcularDescuentos(self) -> float:
@@ -76,7 +87,12 @@ class FacturaCompra(BaseModel):
 
     @property
     def total(self) -> float:
-        return self.calcularSubtotal + self.calcularIvaTotal - self.calcularDescuentos
+        return (
+            self.calcularSubtotal
+            + self.calcularIvaTotal
+            - self.calcularDescuentos
+            - self.calcularRetefuente
+        )
 
     def separar_factura_id(self):
         prefijo, numero = self.numeroFactura.split("-")

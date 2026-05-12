@@ -44,7 +44,6 @@ def construir_payload_compra(factura: FacturaCompra):
 
 
 def mapear_items_siigo(items: List[Producto], config):
-
     items_siigo = []
 
     warehouse = config["warehouse"]
@@ -67,7 +66,7 @@ def mapear_items_siigo(items: List[Producto], config):
 
         item_siigo = {
             "type": "Product",
-            "code": item.codigo_Siigo,
+            "code": str(item.codigo_Siigo),
             "quantity": item.cantidad,
             "price": item.valorUnitario,
             "warehouse": warehouse,

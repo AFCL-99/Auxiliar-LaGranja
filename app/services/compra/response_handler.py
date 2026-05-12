@@ -2,7 +2,6 @@ import re
 
 
 def manejar_respuesta_siigo(response):
-    print(response)
     if response["status_code"] in [200, 201]:
 
         return {

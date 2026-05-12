@@ -99,8 +99,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 
-function obtenerNumeroFactura() {
-    const titulo = document.querySelector("h2").textContent;
-    const match = titulo.match(/(\d+)$/);
-    return match ? match[1] : "";
-}
+document.querySelectorAll(".copiable").forEach(elemento => {
+
+    elemento.addEventListener("click", async () => {
+
+        const texto = elemento.dataset.texto;
+
+        await navigator.clipboard.writeText(texto);
+
+        console.log("Copiado:", texto);
+    });
+});

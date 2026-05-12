@@ -20,7 +20,9 @@
       {% for item in factura.items %}
       <tr>
         <td>{{ loop.index }}</td>
-        <td>{{ item.codigo }}</td>
+        <td class="copiable" data-texto="{{ item.codigo }}">
+          {{ item.codigo }}
+        </td>
         <td>{{ item.descripcion }}</td>
         <td>{{ item.cantidad }}</td>
         <td>{{ item.valorUnitario | moneda}}</td>
@@ -36,6 +38,9 @@
   <p>Subtotal: <strong>{{factura.calcularSubtotal | moneda}}</strong></p>
   {%if factura.calcularDescuentos > 0 %}
   <p>Descuento: <strong>{{factura.calcularDescuentos | moneda}}</strong></p>
+  {% endif %}
+  {%if factura.calcularRetefuente != 0 %}
+  <p>Retefuente: <strong>{{factura.calcularRetefuente | moneda}}</strong></p>
   {% endif %}
   <p>IVA: <strong>{{factura.calcularIvaTotal | moneda}}</strong></p>
   <p class="total">TOTAL: {{factura.total | moneda}}</p>
@@ -62,5 +67,9 @@
   </div>
 </div>
 
-<script src="{{ url_for('static', path='js/preview.js') }}"></script>
+<script src="{{ url_for('static', path='js/preview.js') }}">
+      function copiarCodigo(codigo) {
+        navigator.clipboard.writeText(codigo)
+  }
+</script>
 {% endblock %}

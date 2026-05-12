@@ -59,14 +59,14 @@ PROVIDERS = {
         "discount": {"type": "Value", "value": 0},
         "retefuente": {"enabled": False},
     },
-    "EJEMPLO RTFUENTE": {
+    "TAMAYO POLANCO": {
         "warehouse": 69,
         "supplier": {
-            "id": "abe408cf-0b6a-4048-8d4e-1d6053b34fea",
-            "identification": "890901271",
+            "id": "c0ab5322-e28c-4f0e-b09b-5ace3a0116d4",
+            "identification": "901987380",
             "branch_office": 0,
         },
-        "discount": {"type": "Percentage", "value": 2},
+        "discount": {"type": "Value", "value": 0},
         "retefuente": {"enabled": True, "tax_id": 7321},
     },
 }
