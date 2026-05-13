@@ -7,7 +7,7 @@ async def subir_factura_compra(payload):
     )
 
 
-async def obtener_facturas(params):
+async def obtener_facturasCompra(params):
     return await siigo_client.request(
         method="get", endpoint="/purchases", params=params
     )

@@ -16,7 +16,7 @@ from app.utils.OCR import extraer_datos_banco
 sys.stdout.reconfigure(encoding="utf-8")  # type: ignore
 
 CARPETA_SALIDA = "app/data/pdf_generados"
-CARPETA_IMAGENES = "app/data/pagos a procesar"
+CARPETA_IMAGENES = "app/data/Pagos a procesar"
 SALIDA_PDF = "app/data/imprimir.pdf"
 RECORTE_SUPERIOR = 0.04
 ALTURA_CM = 18

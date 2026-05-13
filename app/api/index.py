@@ -144,7 +144,25 @@ def home():
                 <input type="text" name="numero" placeholder="Ej: 7230"/>
                 <button type="submit">Buscar</button>
             </form>
-        </div>    
+        </div>
+        
+        <div class="card">
+            <h3>🧾 Facturar cotización</h3>
+            <p>Crear factura desde cotización</p>
+
+            <form action="/venta/crear" method="post">
+                <input type="text" name="numero" placeholder="Ej: 1562" required/>
+
+                <label>Vencimiento:</label>
+                <select name="tipo_vencimiento">
+                    <option value="hoy">Hoy</option>
+                    <option value="15">15 días</option>
+                    <option value="fin_mes">Fin de mes</option>
+                </select>
+
+                <button type="submit">Facturar</button>
+            </form>
+        </div>
 
     </body>
     </html>

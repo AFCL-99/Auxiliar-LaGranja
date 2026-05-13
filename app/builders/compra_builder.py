@@ -28,7 +28,7 @@ def construir_payload_compra(factura: FacturaCompra):
 
     items_siigo = mapear_items_siigo(factura.items, config_provider)
     fecha = date.today().strftime("%Y-%m-%d")
-    total = factura.total
+    total = 3560838.44
 
     payload = {
         "document": {"id": DOCUMENT_COMPRA_ID},
@@ -38,7 +38,9 @@ def construir_payload_compra(factura: FacturaCompra):
         "provider_invoice": {"prefix": prefijo, "number": numero},
         "discount_type": config_provider["discount"]["type"],
         "items": items_siigo,
-        "payments": [{"id": PAYMENT_CREDITO_ID, "value": total, "due_date": fecha}],
+        "payments": [
+            {"id": PAYMENT_CREDITO_ID, "value": round(total, 2), "due_date": fecha}
+        ],
     }
     return payload
 

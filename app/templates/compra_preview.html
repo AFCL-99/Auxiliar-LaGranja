@@ -12,22 +12,28 @@
         <th>Producto</th>
         <th>Cantidad</th>
         <th>Precio</th>
+        {%if factura.calcularDescuentos > 0 %}
         <th>Descuento</th>
+        {% endif %}
+        {%if factura.calcularIvaTotal != 0 %}
         <th>IVA</th>
+        {% endif %}
       </tr>
     </thead>
     <tbody>
       {% for item in factura.items %}
       <tr>
         <td>{{ loop.index }}</td>
-        <td class="copiable" data-texto="{{ item.codigo }}">
-          {{ item.codigo }}
-        </td>
+        <td>{{ item.codigo }}</td>
         <td>{{ item.descripcion }}</td>
         <td>{{ item.cantidad }}</td>
         <td>{{ item.valorUnitario | moneda}}</td>
+        {%if factura.calcularDescuentos > 0 %}
         <td>{{ item.descuento }}</td>
+        {% endif %}
+        {%if factura.calcularIvaTotal != 0 %}
         <td>{{ item.iva }}</td>
+        {% endif %}
       </tr>
       {% endfor %}
     </tbody>
@@ -35,14 +41,18 @@
   <br />
 </div>
 <div class="totales">
+  {%if factura.calcularSubtotal != factura.total %}
   <p>Subtotal: <strong>{{factura.calcularSubtotal | moneda}}</strong></p>
+  {% endif %}
   {%if factura.calcularDescuentos > 0 %}
   <p>Descuento: <strong>{{factura.calcularDescuentos | moneda}}</strong></p>
   {% endif %}
   {%if factura.calcularRetefuente != 0 %}
   <p>Retefuente: <strong>{{factura.calcularRetefuente | moneda}}</strong></p>
   {% endif %}
+  {%if factura.calcularIvaTotal != 0 %}
   <p>IVA: <strong>{{factura.calcularIvaTotal | moneda}}</strong></p>
+  {% endif %}
   <p class="total">TOTAL: {{factura.total | moneda}}</p>
 </div>
 

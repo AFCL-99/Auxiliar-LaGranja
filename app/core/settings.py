@@ -69,4 +69,14 @@ PROVIDERS = {
         "discount": {"type": "Value", "value": 0},
         "retefuente": {"enabled": True, "tax_id": 7321},
     },
+    "INVERSIONES AGROCOSUR": {
+        "warehouse": 887,
+        "supplier": {
+            "id": "6b015134-bc68-4ca3-8e03-3e605475b638",
+            "identification": "900935276",
+            "branch_office": 0,
+        },
+        "discount": {"type": "Value", "value": 0},
+        "retefuente": {"enabled": True, "tax_id": 7321},
+    },
 }

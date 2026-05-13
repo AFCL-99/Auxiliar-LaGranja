@@ -12,5 +12,6 @@ async def crear_factura_service(process_id):
 
     payload = construir_payload_compra(factura)
     response = await subir_factura_compra(payload)
-
+    print(payload)
+    print(response)
     return manejar_respuesta_siigo(response)

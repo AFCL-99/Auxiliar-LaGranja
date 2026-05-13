@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta
-from app.integrations.siigo.compra_api import obtener_facturas
+import json
+
+from app.integrations.siigo.compra_api import obtener_facturasCompra
 
 
 async def buscar_factura_por_numero(numero: str):
@@ -20,7 +22,7 @@ async def buscar_factura_por_numero(numero: str):
             "page_size": 25,
         }
 
-        data = await obtener_facturas(params)
+        data = await obtener_facturasCompra(params)
         resultados = data.get("data", [])
 
         if resultados:
@@ -28,5 +30,5 @@ async def buscar_factura_por_numero(numero: str):
                 numero = str(f.get("number", "")).strip().upper()
 
                 if numero == factura_buscada:
-                    print(f)
+                    print(json.dumps(f, indent=4))
                     return f
