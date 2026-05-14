@@ -2,6 +2,7 @@ import re
 
 from app.providers.base import BaseProvider
 from app.schemas.compra import FacturaCompra, Producto
+from app.utils.strings import normalizar_espacios
 
 
 class InversionesAgrocosurProvider(BaseProvider):
@@ -39,7 +40,7 @@ class InversionesAgrocosurProvider(BaseProvider):
 
     def _parsear_producto(self, linea: str):
 
-        linea = self._normalizar_espacios(linea)
+        linea = normalizar_espacios(linea)
         linea = self._normalizar_indice_codigo(linea)
 
         patron = re.search(
@@ -81,9 +82,6 @@ class InversionesAgrocosurProvider(BaseProvider):
         426,006.00 -> 426006
         """
         return float(valor.replace(",", "").strip())
-
-    def _normalizar_espacios(self, texto: str) -> str:
-        return re.sub(r"\s+", " ", texto).strip()
 
     def _normalizar_indice_codigo(self, linea: str) -> str:
         """

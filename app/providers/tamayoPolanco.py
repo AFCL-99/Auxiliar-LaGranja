@@ -2,6 +2,7 @@ import re
 
 from app.providers.base import BaseProvider
 from app.schemas.compra import FacturaCompra, Producto
+from app.utils.strings import normalizar_espacios
 
 
 class TamayoPolancoProvider(BaseProvider):
@@ -47,7 +48,7 @@ class TamayoPolancoProvider(BaseProvider):
 
     def _parsear_producto(self, linea: str):
 
-        linea = self._normalizar_espacios(linea)
+        linea = normalizar_espacios(linea)
 
         patron = re.search(
             r"^\d+\s+"  # índice factura
@@ -91,6 +92,3 @@ class TamayoPolancoProvider(BaseProvider):
         $220,952.00 -> 220952.0
         """
         return float(valor.replace("$", "").replace(",", "").strip())
-
-    def _normalizar_espacios(self, texto: str) -> str:
-        return re.sub(r"\s+", " ", texto).strip()
