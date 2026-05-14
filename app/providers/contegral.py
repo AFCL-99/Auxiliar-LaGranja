@@ -1,9 +1,8 @@
+import math
+import re
 from typing import List
 
 from app.providers.base import BaseProvider
-import re
-import math
-
 from app.schemas.compra import FacturaCompra, Producto
 from app.utils.numbers import formatear_precio, limpiar_numero
 
@@ -93,9 +92,6 @@ class contegralProvider(BaseProvider):
 
                 # idx_iva -4 suele ser cantidad menor/empaque
                 cantidad = float(partes[idx_iva - 5])
-
-                if cantidad == 0 or precio_unitario == 0:
-                    continue
 
                 cantidad, precio_unitario = self.transformar_pacas(
                     codigo, cantidad, precio_unitario

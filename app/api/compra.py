@@ -1,11 +1,16 @@
+from fastapi import APIRouter, File, Form, Request, UploadFile
+from fastapi.responses import HTMLResponse, RedirectResponse
+
 from app.repositories.preview_repository import get_preview, save_preview
 from app.services.analisis.analisis_precios_service import analizar_factura
 from app.services.compra.buscar_service import buscar_factura_por_numero
 from app.services.compra.crear_service import crear_factura_service
-from app.views.compra_view import templates
-from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi import APIRouter, Form, UploadFile, File, Request
 from app.services.compra.preview_service import procesar_preview
+from app.services.pagos.planilla_service import (
+    formatear_planilla_de_pagos,
+    obtener_planilla_de_pagos,
+)
+from app.views.compra_view import templates
 
 router = APIRouter(prefix="/compra", tags=["compra"])
 
@@ -55,4 +60,18 @@ async def analizar(request: Request, numero: str):
         request=request,
         name="compra_analisis.html",
         context={"items": analisis.get("items")},
+    )
+
+
+@router.get("/planillar", response_class=HTMLResponse)
+async def planillaPagos(request: Request, numero: str):
+
+    planilla = await obtener_planilla_de_pagos()
+    if not planilla:
+        return RedirectResponse(url="/", status_code=303)
+    planilla_formateada = formatear_planilla_de_pagos(planilla)
+    return templates.TemplateResponse(
+        request=request,
+        name="planilla_pagos.html",
+        context={"planilla": planilla},
     )

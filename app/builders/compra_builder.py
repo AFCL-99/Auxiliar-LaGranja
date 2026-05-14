@@ -28,7 +28,7 @@ def construir_payload_compra(factura: FacturaCompra):
 
     items_siigo = mapear_items_siigo(factura.items, config_provider)
     fecha = date.today().strftime("%Y-%m-%d")
-    total = 3560838.44
+    total = 7145442.16
 
     payload = {
         "document": {"id": DOCUMENT_COMPRA_ID},

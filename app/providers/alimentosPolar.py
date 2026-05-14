@@ -70,7 +70,7 @@ class AlimentosPolarProvider(BaseProvider):
 
             descuento = numeros[-4]
 
-            iva = numeros[-2]
+            iva = numeros[-2] / 100
 
             return Producto(
                 codigo=codigo,

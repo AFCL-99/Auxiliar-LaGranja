@@ -12,6 +12,9 @@ async def crear_factura_service(process_id):
 
     payload = construir_payload_compra(factura)
     response = await subir_factura_compra(payload)
-    print(payload)
-    print(response)
+    manejo = manejar_respuesta_siigo(response)
+    if manejo.get("mensaje") == "SIIGO rechazó la factura por diferencia en el total.":
+        payload["payments"][0]["value"] = manejo.get("valor")
+
+    response = await subir_factura_compra(payload)
     return manejar_respuesta_siigo(response)

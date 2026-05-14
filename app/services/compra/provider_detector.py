@@ -1,3 +1,4 @@
+from app.providers.alimentosPolar import AlimentosPolarProvider
 from app.providers.contegral import contegralProvider
 from app.providers.inversionesAgrocosur import InversionesAgrocosurProvider
 from app.providers.sierraPineda import SierraPinedaProvider
@@ -8,6 +9,7 @@ providers = [
     SierraPinedaProvider(),
     TamayoPolancoProvider(),
     InversionesAgrocosurProvider(),
+    AlimentosPolarProvider(),
 ]
 
 

@@ -147,6 +147,15 @@ def home():
         </div>
         
         <div class="card">
+            <h3>📄 Planillar</h3>
+            <p>Consultar deudas por pagar</p>
+            <form action="/compra/planillar" method="get">
+                <input type="text" name="numero" placeholder="Ej: 7230"/>
+                <button type="submit">Buscar</button>
+            </form>
+        </div>
+        
+        <div class="card">
             <h3>🧾 Facturar cotización</h3>
             <p>Crear factura desde cotización</p>
 
