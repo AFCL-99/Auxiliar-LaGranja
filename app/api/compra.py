@@ -69,9 +69,9 @@ async def planillaPagos(request: Request, numero: str):
     planilla = await obtener_planilla_de_pagos()
     if not planilla:
         return RedirectResponse(url="/", status_code=303)
-    planilla_formateada = formatear_planilla_de_pagos(planilla)
+    planilla_formateada, total_general = formatear_planilla_de_pagos(planilla)
     return templates.TemplateResponse(
         request=request,
         name="planilla_pagos.html",
-        context={"planilla": planilla},
+        context={"planilla": planilla_formateada, "total_general": total_general},
     )

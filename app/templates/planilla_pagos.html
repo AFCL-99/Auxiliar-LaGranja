@@ -1,24 +1,42 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <div class="container">
-    <table>
-        <thead>
-            <tr>
-                <th>proveedor</th>
-                <th>factura</th>
-                <th>total</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for factura in planilla %}
-            <tr>
-                {%if factura.due.balance > 0 %}
-                <td>{{ factura.provider.name }}</td>
-                <td>{{ factura.due.prefix ~ "-" ~ factura.due.consecutive }}</td>
-                <td>{{ factura.due.balance }}</td>
-                {% endif %}
-            </tr>
-            {% endfor %}
-        </tbody>
+  <table>
+    <thead>
+      <tr>
+        <th>Proveedor</th>
+        <th>Factura</th>
+        <th>Valor</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for proveedor, data in planilla.items() %} {% for factura in
+      data.facturas %}
+      <tr>
+        {% if loop.first %}
+        <td rowspan="{{ data.facturas|length }}">{{ proveedor }}</td>
+        {% endif %}
+
+        <td>{{ factura.due.prefix ~ "-" ~ factura.due.consecutive }}</td>
+
+        <td>{{ factura.due.balance | moneda }}</td>
+
+        {% if loop.first %}
+        <td rowspan="{{ data.facturas|length }}">{{ data.total | moneda }}</td>
+        {% endif %}
+      </tr>
+      {% endfor %} {% endfor %}
+      <tr>
+        <td colspan="3">
+          <strong>TOTAL GENERAL</strong>
+        </td>
+
+        <td>
+          <strong>{{ total_general | moneda }}</strong>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 {% endblock %}
