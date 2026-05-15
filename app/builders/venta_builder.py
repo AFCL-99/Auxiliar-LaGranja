@@ -1,9 +1,7 @@
 from datetime import datetime
-import json
 
 
 def construir_payload_venta(cotizacion: dict, fechaVencimiento: str) -> dict:
-    print(json.dumps(cotizacion, indent=4))
     items_factura = [
         {
             "code": i["code"],

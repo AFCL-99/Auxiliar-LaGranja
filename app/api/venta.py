@@ -13,7 +13,8 @@ async def crear_factura(
 ):
     cotizacion = await buscar_cotizacion_por_numero(numero)
 
-    if not cotizacion:
+    if not cotizacion.get("data"):
         print("Cotizacion no encontrada")
         return RedirectResponse(url="/", status_code=303)
-    return await crear_facturaVenta_service(cotizacion, tipo_vencimiento)
+    resultado = cotizacion.get("data")
+    return await crear_facturaVenta_service(resultado, tipo_vencimiento)

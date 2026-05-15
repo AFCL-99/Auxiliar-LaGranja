@@ -1,0 +1,77 @@
+<html>
+
+<head>
+    <title>Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/index.css') }}" />
+</head>
+
+<body>
+
+    <h1>📊 Auxiliar Siigo</h1>
+
+    <div class="card">
+        <h3>📄 Factura de compra</h3>
+        <p>Procesar PDF y previsualizar</p>
+
+        <form action="/compra/preview" method="post" enctype="multipart/form-data">
+            <label class="drop-zone">
+                <input type="file" name="file" accept="application/pdf" required>
+                <span>Arrastra el PDF aquí o haz clic para seleccionarlo</span>
+            </label>
+
+            <button type="submit" class="btn btn-success">
+                Procesar factura
+            </button>
+        </form>
+    </div>
+    <div class="card">
+        <h3>📄 Alza de precios</h3>
+        <p>Consultar historico de precios</p>
+        <form action="/compra/analizar" method="get">
+            <input type="text" name="numero" placeholder="Ej: 7230" />
+            <button type="submit">Buscar</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h3>📄 Planillar</h3>
+        <p>Consultar deudas por pagar</p>
+        <form action="/compra/planillar" method="get">
+            <input type="text" name="numero" placeholder="Ej: 7230" />
+            <button type="submit">Buscar</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h3>🧾 Facturar cotización</h3>
+        <p>Crear factura desde cotización</p>
+
+        <form action="/venta/crear" method="post">
+            <input type="text" name="numero" placeholder="Ej: 1562" required />
+
+            <label>Vencimiento:</label>
+            <select name="tipo_vencimiento">
+                <option value="hoy">Hoy</option>
+                <option value="15">15 días</option>
+                <option value="fin_mes">Fin de mes</option>
+            </select>
+
+            <button type="submit">Facturar</button>
+        </form>
+    </div>
+
+</body>
+
+</html>
+<script>
+    document.querySelectorAll(".drop-zone input").forEach(input => {
+        input.addEventListener("change", function () {
+            const label = this.closest(".drop-zone");
+            const span = label.querySelector("span");
+
+            if (this.files.length > 0) {
+                span.textContent = "📄 " + this.files[0].name;
+            }
+        });
+    });
+</script>

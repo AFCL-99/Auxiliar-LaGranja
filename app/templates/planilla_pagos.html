@@ -6,6 +6,7 @@
         <th>Proveedor</th>
         <th>Factura</th>
         <th>Valor</th>
+        <th>Descuento</th>
         <th>Total</th>
       </tr>
     </thead>
@@ -19,16 +20,15 @@
         {% endif %}
 
         <td>{{ factura.due.prefix ~ "-" ~ factura.due.consecutive }}</td>
-
         <td>{{ factura.due.balance | moneda }}</td>
-
+        <td></td>
         {% if loop.first %}
         <td rowspan="{{ data.facturas|length }}">{{ data.total | moneda }}</td>
         {% endif %}
       </tr>
       {% endfor %} {% endfor %}
       <tr>
-        <td colspan="3">
+        <td colspan="4">
           <strong>TOTAL GENERAL</strong>
         </td>
 
