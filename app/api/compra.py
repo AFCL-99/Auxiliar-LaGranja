@@ -64,7 +64,7 @@ async def analizar(request: Request, numero: str):
 
 
 @router.get("/planillar", response_class=HTMLResponse)
-async def planillaPagos(request: Request, numero: str):
+async def planillaPagos(request: Request):
 
     planilla = await obtener_planilla_de_pagos()
     if not planilla:

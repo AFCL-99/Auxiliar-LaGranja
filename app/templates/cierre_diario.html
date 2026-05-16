@@ -1,20 +1,103 @@
-<table id="tabla">
-    <tr>
-        <th>Fecha</th>
-        <th></th>
-        <th>Cliente</th>
-        <th>Comprobante</th>
-        <th>Cartera</th>
-        <th>Efectivo</th>
-        <th>Crédito</th>
-        <th>Banco</th>
-        <th>Método</th>
-    </tr>
+{% extends "base.html" %}
 
-    {% for fila in filas %}
-    <tr>
-        {% for columna in fila %}
-        <td>{{columna}}</td>"
-        </tr>
-</table>
-<button onclick="copiar()">📋 Copiar</button>
+{% block title %}
+Cierre Diario
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <h2>📋 Cierre Diario</h2>
+
+    <table class="tabla-cierre">
+
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Documento</th>
+                <th>Cliente</th>
+                <th>Factura</th>
+                <th>Cartera</th>
+                <th>Efectivo</th>
+                <th>Crédito</th>
+                <th>Banco</th>
+                <th>Método</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            {% for fila in filas %}
+
+            {% if fila.separador %}
+
+            <tr class="separador">
+                <td colspan="9">
+                    RECIBOS DE CAJA
+                </td>
+            </tr>
+
+            {% else %}
+
+            <tr>
+
+                <td>
+                    {{ fila.fecha }}
+                </td>
+
+                <td>
+                    {{ fila.numero }}
+                </td>
+
+                <td>
+                    {{ fila.cliente }}
+                </td>
+
+                <td>
+                    {% if fila.numero.startswith("FV") %}
+                    {{ fila.numero }}
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% if fila.cartera %}
+                    {{ fila.cartera | moneda }}
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% if fila.efectivo %}
+                    {{ fila.efectivo | moneda }}
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% if fila.credito %}
+                    {{ fila.credito | moneda }}
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% if fila.banco %}
+                    {{ fila.banco | moneda }}
+                    {% endif %}
+                </td>
+
+                <td>
+                    {{ fila.metodo }}
+                </td>
+
+            </tr>
+
+            {% endif %}
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

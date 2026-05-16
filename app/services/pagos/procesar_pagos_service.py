@@ -1,14 +1,14 @@
-from datetime import datetime
 import os
-from reportlab.lib.utils import ImageReader
-import unicodedata
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import landscape, LETTER
-from PIL import Image, ImageEnhance
 import sys
-
-from PyPDF2 import PdfMerger
+import unicodedata
 import webbrowser
+from datetime import date, datetime
+
+from PIL import Image, ImageEnhance
+from PyPDF2 import PdfMerger
+from reportlab.lib.pagesizes import LETTER, landscape
+from reportlab.lib.utils import ImageReader
+from reportlab.pdfgen import canvas
 
 from app.core.pagos import FLETES, NOMINA, PROVEEDORES
 from app.utils.OCR import extraer_datos_banco
@@ -36,7 +36,8 @@ def generar_nombre_y_carpeta(ruta_imagen):
     recibo, fecha, nombre_detectado, valor, banco = extraer_datos_banco(ruta_imagen)
     if not fecha:
         print("No se detectó fecha en", nombre_base)
-        fecha_str = datetime.now().strftime("%d-%m-%Y")
+        fecha = datetime.now()
+        fecha_str = fecha.strftime("%d-%m-%Y")
     else:
         fecha_str = fecha.strftime("%d-%m-%Y")
     tipo_carpeta, nombre_pdf = clasificar(nombre_detectado)
@@ -69,7 +70,6 @@ def generar_nombre_y_carpeta(ruta_imagen):
         carpeta = os.path.join(CARPETA_SALIDA, "desconocido")
     else:
         return None, None, None
-    print(tercero)
     return nombre_pdf, carpeta, ruta_RP
 
 

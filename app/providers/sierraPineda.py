@@ -98,23 +98,5 @@ class SierraPinedaProvider(BaseProvider):
             iva=iva,
         )
 
-    def _numero(self, valor: str) -> float:
-        valor = valor.strip().replace("%", "")
-
-        # Caso colombiano: 39,180 = 39180
-        if "," in valor and "." not in valor:
-            return float(valor.replace(",", ""))
-
-        # Caso colombiano: 1.234.567,89
-        if "." in valor and "," in valor:
-            return float(valor.replace(".", "").replace(",", "."))
-
-        return float(valor)
-
-    def _porcentaje(self, valor: str) -> float:
-        valor = valor.strip().replace("%", "").replace(",", ".")
-
-        return float(valor)
-
     def _normalizar_espacios(self, texto: str) -> str:
         return re.sub(r"\s+", " ", texto).strip()

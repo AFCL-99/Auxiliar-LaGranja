@@ -18,6 +18,7 @@
         {%if factura.calcularIvaTotal != 0 %}
         <th>IVA</th>
         {% endif %}
+        <th>Total</th>
       </tr>
     </thead>
     <tbody>
@@ -33,6 +34,7 @@
         {% endif %}
         {%if factura.calcularIvaTotal != 0 %}
         <td>{{ item.iva }}</td>
+        <td>{{ (item.cantidad * item.valorUnitario) | moneda }}</td>
         {% endif %}
       </tr>
       {% endfor %}

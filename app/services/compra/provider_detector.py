@@ -1,6 +1,7 @@
 from app.providers.alimentosPolar import AlimentosPolarProvider
 from app.providers.contegral import contegralProvider
 from app.providers.inversionesAgrocosur import InversionesAgrocosurProvider
+from app.providers.italcolDeOccidente import ItalcolDeOccidenteProvider
 from app.providers.sierraPineda import SierraPinedaProvider
 from app.providers.tamayoPolanco import TamayoPolancoProvider
 
@@ -10,6 +11,7 @@ providers = [
     TamayoPolancoProvider(),
     InversionesAgrocosurProvider(),
     AlimentosPolarProvider(),
+    ItalcolDeOccidenteProvider(),
 ]
 
 
